@@ -21,7 +21,7 @@
     <button class="nav-link" data-page="track" onclick="nav('track')">Track</button>
     <button class="nav-link" data-page="admin" onclick="nav('admin')">Admin</button>
   </div>
-  <button class="nav-btn" onclick="nav('submit')"><i class="ti ti-plus" aria-hidden="true"></i> New Complaint</button>
+  <div style="display:flex;gap:8px;align-items:center"><button class="nav-link" id="lang-btn" data-no-i18n onclick="toggleLang()" style="border:0.5px solid var(--color-border-secondary)">తెలుగు</button><button class="nav-btn" onclick="nav('submit')"><i class="ti ti-plus" aria-hidden="true"></i> New Complaint</button></div>
 </div>
 
 <!-- HOME -->
@@ -127,15 +127,19 @@
       <input class="form-input" id="f-village" placeholder="e.g. Ward 4, Rampur" />
     </div>
     <div class="form-row">
+      <button type="button" class="nav-link" id="loc-btn" onclick="getLocation()" style="border:0.5px solid var(--color-border-secondary);padding:8px 14px"><i class="ti ti-current-location" aria-hidden="true"></i> Use my location</button>
+      <span id="loc-status" style="font-size:12px;color:var(--color-text-secondary);margin-left:10px"></span>
+    </div>
+    <div class="form-row">
       <label class="form-label">Issue category</label>
       <select class="form-input" id="f-cat">
         <option value="">Select category</option>
-        <option>Road</option>
-        <option>Streetlight</option>
-        <option>Drainage</option>
-        <option>Water Supply</option>
-        <option>Sanitation</option>
-        <option>Other</option>
+        <option value="Road">Road</option>
+        <option value="Streetlight">Streetlight</option>
+        <option value="Drainage">Drainage</option>
+        <option value="Water Supply">Water Supply</option>
+        <option value="Sanitation">Sanitation</option>
+        <option value="Other">Other</option>
       </select>
     </div>
     <div class="form-row">
@@ -208,11 +212,11 @@
     <div style="display:flex;gap:8px">
       <select id="filter-cat" class="form-input" style="width:150px;padding:7px 10px;font-size:13px" onchange="renderAdmin()">
         <option value="">All categories</option>
-        <option>Road</option><option>Streetlight</option><option>Drainage</option><option>Water Supply</option><option>Sanitation</option><option>Other</option>
+        <option value="Road">Road</option><option value="Streetlight">Streetlight</option><option value="Drainage">Drainage</option><option value="Water Supply">Water Supply</option><option value="Sanitation">Sanitation</option><option value="Other">Other</option>
       </select>
       <select id="filter-status" class="form-input" style="width:140px;padding:7px 10px;font-size:13px" onchange="renderAdmin()">
         <option value="">All statuses</option>
-        <option>Open</option><option>In Progress</option><option>Resolved</option><option>Rejected</option>
+        <option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option><option value="Rejected">Rejected</option>
       </select>
     </div>
   </div>
