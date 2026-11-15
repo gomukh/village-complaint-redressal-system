@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GramSeva Portal – Village Complaint Redressal System</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h2 class="sr-only">Village Complaint Redressal System — citizen portal for reporting and tracking local infrastructure issues</h2>
+
+<div class="nav">
+  <div class="nav-logo">
+    <div class="dot"><i class="ti ti-building-community" aria-hidden="true" style="font-size:18px"></i></div>
+    GramSeva Portal
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" data-page="home" onclick="nav('home')">Home</button>
+    <button class="nav-link" data-page="submit" onclick="nav('submit')">File Complaint</button>
+    <button class="nav-link" data-page="track" onclick="nav('track')">Track</button>
+    <button class="nav-link" data-page="admin" onclick="nav('admin')">Admin</button>
+  </div>
+  <button class="nav-btn" onclick="nav('submit')"><i class="ti ti-plus" aria-hidden="true"></i> New Complaint</button>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1>Report. Track. Resolve.</h1>
+    <p>Raise infrastructure complaints for your village — roads, drainage, streetlights and more. Track progress in real time.</p>
+    <div class="hero-btns">
+      <button class="btn-white" onclick="nav('submit')">File a Complaint</button>
+      <button class="btn-outline" onclick="nav('track')">Track Status</button>
+    </div>
+    <div class="hero-badge" style="cursor:pointer" onclick="openList({status:'Resolved'})">
+      <div class="num" id="hero-resolved">0</div>
+      <div class="lbl">Issues resolved</div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card" style="cursor:pointer" onclick="openList({})">
+      <div class="stat-label"><i class="ti ti-file-description" aria-hidden="true" style="color:#1D9E75"></i> Total Complaints</div>
+      <div class="stat-num" id="stat-total">312</div>
+      <div class="stat-sub" style="color:#1D9E75" id="stat-total-sub">↑ 18 this week</div>
+    </div>
+    <div class="stat-card" style="cursor:pointer" onclick="openList({status:'In Progress'})">
+      <div class="stat-label"><i class="ti ti-clock" aria-hidden="true" style="color:#BA7517"></i> In Progress</div>
+      <div class="stat-num" id="stat-prog">48</div>
+      <div class="stat-sub" style="color:#BA7517">Active work orders</div>
+    </div>
+    <div class="stat-card" style="cursor:pointer" onclick="openList({status:'Resolved'})">
+      <div class="stat-label"><i class="ti ti-circle-check" aria-hidden="true" style="color:#3B6D11"></i> Resolved</div>
+      <div class="stat-num" id="stat-res">247</div>
+      <div class="stat-sub" style="color:#3B6D11" id="stat-res-sub">79% resolution rate</div>
+    </div>
+    <div class="stat-card" style="cursor:pointer" onclick="openList({status:'Resolved'})">
+      <div class="stat-label"><i class="ti ti-hourglass" aria-hidden="true" style="color:#993C1D"></i> Avg. Resolution</div>
+      <div class="stat-num" id="stat-avg">4.2d</div>
+      <div class="stat-sub" style="color:var(--color-text-secondary)">Days per issue</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="section-title">Issue Categories</div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="filterAndGo('Road')">
+          <div class="cat-icon" style="background:#FAECE7"><i class="ti ti-road" aria-hidden="true" style="color:#D85A30"></i></div>
+          <div class="cat-name">Roads</div>
+          <div class="cat-count">84 complaints</div>
+        </div>
+        <div class="cat-card" onclick="filterAndGo('Streetlight')">
+          <div class="cat-icon" style="background:#FAEEDA"><i class="ti ti-bulb" aria-hidden="true" style="color:#BA7517"></i></div>
+          <div class="cat-name">Streetlights</div>
+          <div class="cat-count">61 complaints</div>
+        </div>
+        <div class="cat-card" onclick="filterAndGo('Drainage')">
+          <div class="cat-icon" style="background:#E6F1FB"><i class="ti ti-droplet" aria-hidden="true" style="color:#185FA5"></i></div>
+          <div class="cat-name">Drainage</div>
+          <div class="cat-count">73 complaints</div>
+        </div>
+        <div class="cat-card" onclick="filterAndGo('Water Supply')">
+          <div class="cat-icon" style="background:#E1F5EE"><i class="ti ti-wave-square" aria-hidden="true" style="color:#0F6E56"></i></div>
+          <div class="cat-name">Water Supply</div>
+          <div class="cat-count">52 complaints</div>
+        </div>
+        <div class="cat-card" onclick="filterAndGo('Sanitation')">
+          <div class="cat-icon" style="background:#FBEAF0"><i class="ti ti-trash" aria-hidden="true" style="color:#993556"></i></div>
+          <div class="cat-name">Sanitation</div>
+          <div class="cat-count">30 complaints</div>
+        </div>
+        <div class="cat-card" onclick="filterAndGo('Other')">
+          <div class="cat-icon" style="background:#F1EFE8"><i class="ti ti-dots" aria-hidden="true" style="color:#5F5E5A"></i></div>
+          <div class="cat-name">Other</div>
+          <div class="cat-count">12 complaints</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-title">Recent Activity</div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="recent-feed"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="page" id="page-submit">
+  <div style="margin-bottom:20px">
+    <div style="font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">File a new complaint</div>
+    <div style="font-size:13px;color:var(--color-text-secondary)">Fill in the details below. You'll receive a complaint ID to track progress.</div>
+  </div>
+  <div class="form-card">
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">Full name</label>
+        <input class="form-input" id="f-name" placeholder="e.g. Ramesh Kumar" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Mobile number</label>
+        <input class="form-input" id="f-phone" placeholder="10-digit number" inputmode="numeric" maxlength="10" />
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Village / Ward</label>
+      <input class="form-input" id="f-village" placeholder="e.g. Ward 4, Rampur" />
+    </div>
+    <div class="form-row">
+      <label class="form-label">Issue category</label>
+      <select class="form-input" id="f-cat">
+        <option value="">Select category</option>
+        <option>Road</option>
+        <option>Streetlight</option>
+        <option>Drainage</option>
+        <option>Water Supply</option>
+        <option>Sanitation</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Complaint description</label>
+      <textarea class="form-input" id="f-desc" rows="3" placeholder="Describe the issue in detail — location, severity, how long it's been present..."></textarea>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Upload photo</label>
+      <div class="upload-box" id="upload-box" onclick="document.getElementById('file-in').click()">
+        <i class="ti ti-photo-up" aria-hidden="true"></i>
+        <p id="upload-label">Click to upload photo evidence</p>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:4px">JPG, PNG up to 5 MB</p>
+      </div>
+      <input type="file" id="file-in" accept="image/*" style="display:none" onchange="handleFile(this)" />
+    </div>
+    <div class="form-row" style="margin-bottom:0">
+      <button class="submit-btn" onclick="submitComplaint()"><i class="ti ti-send" aria-hidden="true"></i> Submit Complaint</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACK -->
+<div class="page" id="page-track">
+  <div style="margin-bottom:20px">
+    <div style="font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Track your complaint</div>
+    <div style="font-size:13px;color:var(--color-text-secondary)">Enter your complaint ID to view real-time status and updates.</div>
+  </div>
+  <div class="track-input-row">
+    <input id="track-id" placeholder="e.g. GS-2026-0002" onkeydown="if(event.key==='Enter')doTrack()" />
+    <button class="track-btn" onclick="doTrack()"><i class="ti ti-search" aria-hidden="true"></i> Track</button>
+  </div>
+  <div id="track-result" style="display:none">
+    <div class="complaint-card" style="cursor:default;margin-bottom:20px">
+      <div class="c-thumb" id="tr-icon" style="background:#E1F5EE"></div>
+      <div class="c-body">
+        <div class="c-top">
+          <span class="c-title" id="tr-title"></span>
+          <span class="badge" id="tr-badge"></span>
+        </div>
+        <div style="font-size:13px;color:var(--color-text-secondary);margin-top:4px" id="tr-desc"></div>
+        <div class="c-meta">
+          <span id="tr-village"></span>
+          <span id="tr-date"></span>
+        </div>
+      </div>
+      <div class="c-right">
+        <div class="c-id" id="tr-id"></div>
+      </div>
+    </div>
+    <div class="section-title">Progress timeline</div>
+    <div class="timeline" id="track-timeline"></div>
+  </div>
+  <div id="track-none" style="display:none;text-align:center;padding:40px;color:var(--color-text-secondary)">
+    <i class="ti ti-mood-sad" style="font-size:36px;display:block;margin-bottom:12px" aria-hidden="true"></i>
+    <div>No complaint found with that ID. Please check and try again.</div>
+  </div>
+  <div style="margin-top:28px">
+    <div class="section-title" id="browse-title">Or browse your complaints</div>
+    <div class="complaints-list" id="complaints-list"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
+    <div>
+      <div style="font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Admin dashboard</div>
+      <div style="font-size:13px;color:var(--color-text-secondary)">Manage and update complaint statuses</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <select id="filter-cat" class="form-input" style="width:150px;padding:7px 10px;font-size:13px" onchange="renderAdmin()">
+        <option value="">All categories</option>
+        <option>Road</option><option>Streetlight</option><option>Drainage</option><option>Water Supply</option><option>Sanitation</option><option>Other</option>
+      </select>
+      <select id="filter-status" class="form-input" style="width:140px;padding:7px 10px;font-size:13px" onchange="renderAdmin()">
+        <option value="">All statuses</option>
+        <option>Open</option><option>In Progress</option><option>Resolved</option><option>Rejected</option>
+      </select>
+    </div>
+  </div>
+  <div style="overflow-x:auto;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:4px">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Category</th><th>Description</th><th>Village</th><th>Filed</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="admin-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
